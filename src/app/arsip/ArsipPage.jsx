@@ -5,9 +5,10 @@ import PageHeader from "../../components/layout/PageHeader";
 import TableSearch from "../../components/table/TableSearch";
 import TableFilter from "../../components/table/TableFilter";
 import TablePagination from "../../components/table/TablePagination";
+import ArsipFormModal from "../../components/arsip/ArsipFormModal";
 
 function ArsipPage() {
-  const { data, loading, error } = useArsip();
+  const { data, loading, error, tambahArsip } = useArsip();
 
   // 🔎 Search
   const [query, setQuery] = useState("");
@@ -19,6 +20,9 @@ function ArsipPage() {
   // 📄 Pagination
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 10;
+
+  // ➕ Modal tambah arsip
+  const [modalOpen, setModalOpen] = useState(false);
 
   // 📋 Options (dinamis)
   const jenisBangunanOptions = useMemo(
@@ -116,6 +120,13 @@ function ArsipPage() {
           options={kurunWaktuOptions}
           onChange={setKurunWaktu}
         />
+
+        <button
+          onClick={() => setModalOpen(true)}
+          className="ml-auto px-4 py-2 bg-blue-600 text-white rounded"
+        >
+          + Tambah arsip
+        </button>
       </div>
 
       <ArsipTable data={paginatedData} />
@@ -125,6 +136,12 @@ function ArsipPage() {
         totalPages={totalPages}
         onPrev={() => setPage((p) => Math.max(1, p - 1))}
         onNext={() => setPage((p) => Math.min(totalPages, p + 1))}
+      />
+
+      <ArsipFormModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSubmit={tambahArsip}
       />
     </div>
   );

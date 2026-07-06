@@ -1,31 +1,38 @@
-import { useEffect, useState } from "react";
-import { supabase } from "../services/supabaseClient";
+import { useEffect, useState, useCallback } from "react";
+import { getArsip, createArsip } from "../services/arsipService";
 
 export function useArsip() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    async function fetchArsip() {
-      setLoading(true);
+  const fetchArsip = useCallback(async () => {
+    setLoading(true);
 
-      const { data, error } = await supabase
-        .from("koleksi_arsip")
-        .select("*")
-        .order("created_at", { ascending: false });
+    const { data, error } = await getArsip();
 
-      if (error) {
-        setError(error);
-      } else {
-        setData(data);
-      }
-
-      setLoading(false);
+    if (error) {
+      setError(error);
+    } else {
+      setData(data);
     }
 
-    fetchArsip();
+    setLoading(false);
   }, []);
 
-  return { data, loading, error };
+  useEffect(() => {
+    fetchArsip();
+  }, [fetchArsip]);
+
+  async function tambahArsip(payload) {
+    const { error } = await createArsip(payload);
+    if (error) {
+      return { error };
+    }
+    // refresh data setelah tambah
+    await fetchArsip();
+    return { error: null };
+  }
+
+  return { data, loading, error, tambahArsip };
 }
