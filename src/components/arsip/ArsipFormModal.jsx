@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const KOSONG = {
   no_berkas: "",
@@ -11,10 +11,32 @@ const KOSONG = {
   keterangan_boks: "",
 };
 
-function ArsipFormModal({ open, onClose, onSubmit }) {
+function ArsipFormModal({ open, onClose, onSubmit, initialData }) {
   const [form, setForm] = useState(KOSONG);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
+
+  const isEdit = Boolean(initialData);
+
+  useEffect(() => {
+    if (open) {
+      setForm(
+        initialData
+          ? {
+              no_berkas: initialData.no_berkas ?? "",
+              kode_klasifikasi: initialData.kode_klasifikasi ?? "",
+              lokasi_bangunan: initialData.lokasi_bangunan ?? "",
+              jenis_bangunan: initialData.jenis_bangunan ?? "",
+              kurun_waktu: initialData.kurun_waktu ?? "",
+              jumlah_arsip: initialData.jumlah_arsip ?? "",
+              tingkat_perkembangan: initialData.tingkat_perkembangan ?? "Asli",
+              keterangan_boks: initialData.keterangan_boks ?? "",
+            }
+          : KOSONG
+      );
+      setError(null);
+    }
+  }, [open, initialData]);
 
   if (!open) return null;
 
@@ -40,7 +62,6 @@ function ArsipFormModal({ open, onClose, onSubmit }) {
       return;
     }
 
-    setForm(KOSONG);
     setSaving(false);
     onClose();
   }
@@ -49,7 +70,9 @@ function ArsipFormModal({ open, onClose, onSubmit }) {
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg w-full max-w-md p-5">
         <div className="flex items-center justify-between mb-1">
-          <h3 className="text-lg font-semibold">Tambah arsip</h3>
+          <h3 className="text-lg font-semibold">
+            {isEdit ? "Edit arsip" : "Tambah arsip"}
+          </h3>
           <button
             type="button"
             onClick={onClose}
@@ -59,7 +82,7 @@ function ArsipFormModal({ open, onClose, onSubmit }) {
           </button>
         </div>
         <p className="text-sm text-gray-500 mb-4">
-          Lengkapi data koleksi arsip baru.
+          {isEdit ? "Ubah data koleksi arsip ini." : "Lengkapi data koleksi arsip baru."}
         </p>
 
         {error && (
@@ -153,18 +176,10 @@ function ArsipFormModal({ open, onClose, onSubmit }) {
           </div>
 
           <div className="flex justify-end gap-2 pt-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 border rounded"
-            >
+            <button type="button" onClick={onClose} className="px-4 py-2 border rounded">
               Batal
             </button>
-            <button
-              type="submit"
-              disabled={saving}
-              className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
-            >
+            <button type="submit" disabled={saving} className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50">
               {saving ? "Menyimpan..." : "Simpan"}
             </button>
           </div>

@@ -8,23 +8,17 @@ import TablePagination from "../../components/table/TablePagination";
 import ArsipFormModal from "../../components/arsip/ArsipFormModal";
 
 function ArsipPage() {
-  const { data, loading, error, tambahArsip } = useArsip();
+  const { data, loading, error, tambahArsip, editArsip } = useArsip();
 
-  // 🔎 Search
   const [query, setQuery] = useState("");
-
-  // 🔽 Filters
   const [jenisBangunan, setJenisBangunan] = useState("");
   const [kurunWaktu, setKurunWaktu] = useState("");
-
-  // 📄 Pagination
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 10;
 
-  // ➕ Modal tambah arsip
   const [modalOpen, setModalOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState(null);
 
-  // 📋 Options (dinamis)
   const jenisBangunanOptions = useMemo(
     () =>
       Array.from(
@@ -41,7 +35,6 @@ function ArsipPage() {
     [data]
   );
 
-  // 🔍 Filtered data (search + dropdown)
   const filteredData = useMemo(() => {
     let result = data;
 
@@ -63,31 +56,42 @@ function ArsipPage() {
     }
 
     if (jenisBangunan) {
-      result = result.filter(
-        (item) => item.jenis_bangunan === jenisBangunan
-      );
+      result = result.filter((item) => item.jenis_bangunan === jenisBangunan);
     }
 
     if (kurunWaktu) {
-      result = result.filter(
-        (item) => item.kurun_waktu === kurunWaktu
-      );
+      result = result.filter((item) => item.kurun_waktu === kurunWaktu);
     }
 
     return result;
   }, [data, query, jenisBangunan, kurunWaktu]);
 
-  // 🔁 Reset page saat filter/search berubah
   useEffect(() => {
     setPage(1);
   }, [query, jenisBangunan, kurunWaktu]);
 
-  // 📄 Pagination slice
   const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
   const paginatedData = useMemo(() => {
     const start = (page - 1) * PAGE_SIZE;
     return filteredData.slice(start, start + PAGE_SIZE);
   }, [filteredData, page]);
+
+  function openTambah() {
+    setEditingItem(null);
+    setModalOpen(true);
+  }
+
+  function openEdit(item) {
+    setEditingItem(item);
+    setModalOpen(true);
+  }
+
+  function handleModalSubmit(payload) {
+    if (editingItem) {
+      return editArsip(editingItem.id, payload);
+    }
+    return tambahArsip(payload);
+  }
 
   if (loading) return <div>Loading arsip...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -99,7 +103,6 @@ function ArsipPage() {
         subtitle="Daftar arsip yang tersimpan di Diskarpus"
       />
 
-      {/* Search + Filters */}
       <div className="flex flex-wrap gap-3 items-center">
         <TableSearch
           value={query}
@@ -122,14 +125,14 @@ function ArsipPage() {
         />
 
         <button
-          onClick={() => setModalOpen(true)}
+          onClick={openTambah}
           className="ml-auto px-4 py-2 bg-blue-600 text-white rounded"
         >
           + Tambah arsip
         </button>
       </div>
 
-      <ArsipTable data={paginatedData} />
+      <ArsipTable data={paginatedData} onEdit={openEdit} />
 
       <TablePagination
         page={page}
@@ -141,7 +144,8 @@ function ArsipPage() {
       <ArsipFormModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        onSubmit={tambahArsip}
+        onSubmit={handleModalSubmit}
+        initialData={editingItem}
       />
     </div>
   );

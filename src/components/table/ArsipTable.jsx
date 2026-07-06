@@ -1,4 +1,4 @@
-function ArsipTable({ data }) {
+function ArsipTable({ data, onEdit }) {
   return (
     <div className="overflow-x-auto border rounded bg-white">
       <table className="min-w-full border-collapse">
@@ -12,6 +12,7 @@ function ArsipTable({ data }) {
             <th className="border px-3 py-2 text-right">Jumlah Arsip</th>
             <th className="border px-3 py-2 text-left">Tingkat Perkembangan</th>
             <th className="border px-3 py-2 text-left">Keterangan Boks</th>
+            <th className="border px-3 py-2 text-center">Aksi</th>
           </tr>
         </thead>
 
@@ -19,7 +20,7 @@ function ArsipTable({ data }) {
           {data.length === 0 ? (
             <tr>
               <td
-                colSpan={8}
+                colSpan={9}
                 className="border px-3 py-4 text-center text-gray-500"
               >
                 Belum ada data arsip
@@ -40,6 +41,14 @@ function ArsipTable({ data }) {
                   {item.tingkat_perkembangan}
                 </td>
                 <td className="border px-3 py-2">{item.keterangan_boks}</td>
+                <td className="border px-3 py-2 text-center">
+                  <button
+                    onClick={() => onEdit(item)}
+                    className="text-blue-600 hover:underline text-sm"
+                  >
+                    Edit
+                  </button>
+                </td>
               </tr>
             ))
           )}

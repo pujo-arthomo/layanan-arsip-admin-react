@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { getArsip, createArsip } from "../services/arsipService";
+import { getArsip, createArsip, updateArsip } from "../services/arsipService";
 
 export function useArsip() {
   const [data, setData] = useState([]);
@@ -29,10 +29,18 @@ export function useArsip() {
     if (error) {
       return { error };
     }
-    // refresh data setelah tambah
     await fetchArsip();
     return { error: null };
   }
 
-  return { data, loading, error, tambahArsip };
+  async function editArsip(id, payload) {
+    const { error } = await updateArsip(id, payload);
+    if (error) {
+      return { error };
+    }
+    await fetchArsip();
+    return { error: null };
+  }
+
+  return { data, loading, error, tambahArsip, editArsip };
 }

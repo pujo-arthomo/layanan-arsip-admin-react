@@ -14,3 +14,11 @@ export async function createArsip(payload) {
     .from("koleksi_arsip")
     .insert([payload]);
 }
+
+// Edit arsip
+export async function updateArsip(id, payload) {
+  return await supabase
+    .from("koleksi_arsip")
+    .update({ ...payload, updated_at: new Date().toISOString() })
+    .eq("id", id);
+}
