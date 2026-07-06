@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../components/auth/AuthProvider";
 
 function LoginPage() {
   const { login } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -17,9 +19,11 @@ function LoginPage() {
 
     if (error) {
       setError(error.message);
+      setLoading(false);
+      return;
     }
 
-    setLoading(false);
+    navigate("/dashboard");
   }
 
   return (
