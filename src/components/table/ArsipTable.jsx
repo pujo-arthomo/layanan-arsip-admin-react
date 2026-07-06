@@ -1,4 +1,4 @@
-function ArsipTable({ data, onEdit }) {
+function ArsipTable({ data, onEdit, onDelete }) {
   return (
     <div className="overflow-x-auto border rounded bg-white">
       <table className="min-w-full border-collapse">
@@ -19,10 +19,7 @@ function ArsipTable({ data, onEdit }) {
         <tbody>
           {data.length === 0 ? (
             <tr>
-              <td
-                colSpan={9}
-                className="border px-3 py-4 text-center text-gray-500"
-              >
+              <td colSpan={9} className="border px-3 py-4 text-center text-gray-500">
                 Belum ada data arsip
               </td>
             </tr>
@@ -34,19 +31,21 @@ function ArsipTable({ data, onEdit }) {
                 <td className="border px-3 py-2">{item.lokasi_bangunan}</td>
                 <td className="border px-3 py-2">{item.jenis_bangunan}</td>
                 <td className="border px-3 py-2">{item.kurun_waktu}</td>
-                <td className="border px-3 py-2 text-right">
-                  {item.jumlah_arsip}
-                </td>
-                <td className="border px-3 py-2">
-                  {item.tingkat_perkembangan}
-                </td>
+                <td className="border px-3 py-2 text-right">{item.jumlah_arsip}</td>
+                <td className="border px-3 py-2">{item.tingkat_perkembangan}</td>
                 <td className="border px-3 py-2">{item.keterangan_boks}</td>
-                <td className="border px-3 py-2 text-center">
+                <td className="border px-3 py-2 text-center space-x-3">
                   <button
                     onClick={() => onEdit(item)}
                     className="text-blue-600 hover:underline text-sm"
                   >
                     Edit
+                  </button>
+                  <button
+                    onClick={() => onDelete(item)}
+                    className="text-red-600 hover:underline text-sm"
+                  >
+                    Hapus
                   </button>
                 </td>
               </tr>

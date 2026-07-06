@@ -8,7 +8,7 @@ import TablePagination from "../../components/table/TablePagination";
 import ArsipFormModal from "../../components/arsip/ArsipFormModal";
 
 function ArsipPage() {
-  const { data, loading, error, tambahArsip, editArsip } = useArsip();
+  const { data, loading, error, tambahArsip, editArsip, hapusArsip } = useArsip();
 
   const [query, setQuery] = useState("");
   const [jenisBangunan, setJenisBangunan] = useState("");
@@ -93,6 +93,18 @@ function ArsipPage() {
     return tambahArsip(payload);
   }
 
+  async function handleDelete(item) {
+    const konfirmasi = window.confirm(
+      `Yakin mau hapus arsip "${item.no_berkas}"? Data yang dihapus tidak bisa dikembalikan.`
+    );
+    if (!konfirmasi) return;
+
+    const { error } = await hapusArsip(item.id);
+    if (error) {
+      alert(`Gagal menghapus: ${error.message}`);
+    }
+  }
+
   if (loading) return <div>Loading arsip...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
@@ -132,7 +144,7 @@ function ArsipPage() {
         </button>
       </div>
 
-      <ArsipTable data={paginatedData} onEdit={openEdit} />
+      <ArsipTable data={paginatedData} onEdit={openEdit} onDelete={handleDelete} />
 
       <TablePagination
         page={page}
