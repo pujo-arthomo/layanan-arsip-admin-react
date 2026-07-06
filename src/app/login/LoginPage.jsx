@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { supabase } from "../../services/supabaseClient";
+import { useAuth } from "../../hooks/useAuth";
 
 function LoginPage() {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -12,10 +13,7 @@ function LoginPage() {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { error } = await login(email, password);
 
     if (error) {
       setError(error.message);
