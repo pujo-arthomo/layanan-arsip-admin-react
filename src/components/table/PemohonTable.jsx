@@ -1,42 +1,94 @@
-function PemohonTable({ data }) {
-  return (
-    <div className="overflow-x-auto border rounded bg-white">
-      <table className="min-w-full border-collapse">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="border px-3 py-2 text-left">Waktu Pengajuan</th>
-            <th className="border px-3 py-2 text-left">Nama</th>
-            <th className="border px-3 py-2 text-left">Domisili</th>
-            <th className="border px-3 py-2 text-left">No Rekomendasi</th>
-          </tr>
-        </thead>
+import { useState, useMemo } from "react";
+import { usePemohon } from "../../hooks/usePemohon";
+import PemohonTable from "../../components/table/PemohonTable";
+import PageHeader from "../../components/layout/PageHeader";
+import TableSearch from "../../components/table/TableSearch";
+import PemohonFormModal from "../../components/pemohon/PemohonFormModal";
 
-        <tbody>
-          {data.length === 0 ? (
-            <tr>
-              <td
-                colSpan={4}
-                className="border px-3 py-4 text-center text-gray-500"
-              >
-                Belum ada data pemohon
-              </td>
-            </tr>
-          ) : (
-            data.map((item) => (
-              <tr key={item.id} className="hover:bg-gray-50">
-                <td className="border px-3 py-2">
-                  {new Date(item.waktu_pengajuan).toLocaleString()}
-                </td>
-                <td className="border px-3 py-2">{item.nama}</td>
-                <td className="border px-3 py-2">{item.domisili}</td>
-                <td className="border px-3 py-2">{item.no_rekomendasi}</td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+function PemohonPage() {
+  const { data, loading, error, tambahPemohon, editPemohon, hapusPemohon } =
+    usePemohon();
+  const [query, setQuery] = useState("");
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState(null);
+
+  // 🔍 Filter data pemohon (client-side)
+  const filteredData = useMemo(() => {
+    if (!query) return data;
+
+    const q = query.toLowerCase();
+
+    return data.filter((item) =>
+      [item.nama, item.domisili, item.no_rekomendasi]
+        .filter(Boolean)
+        .some((field) => field.toLowerCase().includes(q))
+    );
+  }, [data, query]);
+
+  function openTambah() {
+    setEditingItem(null);
+    setModalOpen(true);
+  }
+
+  function openEdit(item) {
+    setEditingItem(item);
+    setModalOpen(true);
+  }
+
+  function handleModalSubmit(payload) {
+    if (editingItem) {
+      return editPemohon(editingItem.id, payload);
+    }
+    return tambahPemohon(payload);
+  }
+
+  async function handleDelete(item) {
+    const konfirmasi = window.confirm(
+      `Yakin mau hapus data pemohon "${item.nama}"? Data yang dihapus tidak bisa dikembalikan.`
+    );
+    if (!konfirmasi) return;
+
+    const { error } = await hapusPemohon(item.id);
+    if (error) {
+      alert(`Gagal menghapus: ${error.message}`);
+    }
+  }
+
+  if (loading) return <div>Loading pemohon...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-start justify-between">
+        <PageHeader
+          title="Pemohon Arsip"
+          subtitle="Daftar permohonan layanan arsip"
+        />
+        <button
+          onClick={openTambah}
+          className="px-4 py-2 bg-blue-600 text-white rounded"
+        >
+          + Tambah pemohon
+        </button>
+      </div>
+
+      <TableSearch
+        value={query}
+        onChange={setQuery}
+        placeholder="Cari nama, domisili, atau no rekomendasi..."
+      />
+
+      <PemohonTable data={filteredData} onEdit={openEdit} onDelete={handleDelete} />
+
+      <PemohonFormModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSubmit={handleModalSubmit}
+        initialData={editingItem}
+      />
     </div>
   );
 }
 
-export default PemohonTable;
+export default PemohonPage;
