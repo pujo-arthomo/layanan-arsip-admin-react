@@ -6,6 +6,7 @@ import TableSearch from "../../components/table/TableSearch";
 import TableFilter from "../../components/table/TableFilter";
 import TablePagination from "../../components/table/TablePagination";
 import ArsipFormModal from "../../components/arsip/ArsipFormModal";
+import ArsipImportModal from "../../components/arsip/ArsipImportModal";
 import { getArsipFileUrl } from "../../services/arsipService";
 import { useToast } from "../../components/ui/ToastProvider";
 
@@ -24,6 +25,7 @@ function ArsipPage() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+  const [importOpen, setImportOpen] = useState(false);
 
   const jenisBangunanOptions = useMemo(
     () =>
@@ -183,8 +185,15 @@ function ArsipPage() {
         />
 
         <button
+          onClick={() => setImportOpen(true)}
+          className="ml-auto px-4 py-2 border rounded"
+        >
+          Import CSV
+        </button>
+
+        <button
           onClick={openTambah}
-          className="ml-auto px-4 py-2 bg-blue-600 text-white rounded"
+          className="px-4 py-2 bg-blue-600 text-white rounded"
         >
           + Tambah arsip
         </button>
@@ -212,6 +221,12 @@ function ArsipPage() {
         onClose={() => setModalOpen(false)}
         onSubmit={handleModalSubmit}
         initialData={editingItem}
+      />
+
+      <ArsipImportModal
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        tambahArsip={tambahArsip}
       />
     </div>
   );

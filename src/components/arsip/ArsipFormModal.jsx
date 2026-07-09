@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
 import { uploadArsipFile } from "../../services/arsipService";
-
-const JENIS_BANGUNAN_OPTIONS = [
-  "Rumah",
-  "Ruko",
-  "Gedung Sekolah",
-];
+import {
+  JENIS_BANGUNAN_OPTIONS,
+  TINGKAT_PERKEMBANGAN_OPTIONS,
+} from "../../constants/arsip";
 
 const KOSONG = {
   no_berkas: "",
@@ -201,9 +199,9 @@ function ArsipFormModal({ open, onClose, onSubmit, initialData }) {
               onChange={(e) => handleChange("tingkat_perkembangan", e.target.value)}
               className="w-full border px-3 py-2 rounded bg-white"
             >
-              <option>Asli</option>
-              <option>Salinan</option>
-              <option>Duplikat</option>
+              {TINGKAT_PERKEMBANGAN_OPTIONS.map((opt) => (
+                <option key={opt}>{opt}</option>
+              ))}
             </select>
           </div>
 
