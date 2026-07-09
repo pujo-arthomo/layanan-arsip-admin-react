@@ -9,6 +9,18 @@ import ArsipFormModal from "../../components/arsip/ArsipFormModal";
 import ArsipImportModal from "../../components/arsip/ArsipImportModal";
 import { getArsipFileUrl } from "../../services/arsipService";
 import { useToast } from "../../components/ui/ToastProvider";
+import { exportCsv, cetakPdf } from "../../utils/export";
+
+const KOLOM_EXPORT = [
+  { label: "No Berkas", field: "no_berkas" },
+  { label: "Kode Klasifikasi", field: "kode_klasifikasi" },
+  { label: "Lokasi Bangunan", field: "lokasi_bangunan" },
+  { label: "Jenis Bangunan", field: "jenis_bangunan" },
+  { label: "Kurun Waktu", field: "kurun_waktu" },
+  { label: "Jumlah Arsip", field: "jumlah_arsip" },
+  { label: "Tingkat Perkembangan", field: "tingkat_perkembangan" },
+  { label: "Keterangan Boks", field: "keterangan_boks" },
+];
 
 function ArsipPage() {
   const { data, loading, error, tambahArsip, editArsip, hapusArsip } = useArsip();
@@ -26,6 +38,8 @@ function ArsipPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [importOpen, setImportOpen] = useState(false);
+
+  const [selectedIds, setSelectedIds] = useState(new Set());
 
   const jenisBangunanOptions = useMemo(
     () =>
@@ -88,7 +102,12 @@ function ArsipPage() {
 
   useEffect(() => {
     setPage(1);
+    setSelectedIds(new Set());
   }, [query, jenisBangunan, kurunWaktu, sortField, sortDirection]);
+
+  useEffect(() => {
+    setSelectedIds(new Set());
+  }, [page]);
 
   const totalPages = Math.ceil(sortedData.length / PAGE_SIZE);
   const paginatedData = useMemo(() => {
@@ -103,6 +122,25 @@ function ArsipPage() {
       setSortField(field);
       setSortDirection("asc");
     }
+  }
+
+  function toggleSelect(id) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleSelectAll() {
+    setSelectedIds((prev) => {
+      const allSelected =
+        paginatedData.length > 0 &&
+        paginatedData.every((item) => prev.has(item.id));
+      if (allSelected) return new Set();
+      return new Set(paginatedData.map((item) => item.id));
+    });
   }
 
   function openTambah() {
@@ -144,6 +182,22 @@ function ArsipPage() {
     }
   }
 
+  async function handleBulkDelete() {
+    const konfirmasi = window.confirm(
+      `Yakin mau hapus ${selectedIds.size} arsip terpilih? Data yang dihapus tidak bisa dikembalikan.`
+    );
+    if (!konfirmasi) return;
+
+    let sukses = 0;
+    for (const id of selectedIds) {
+      const { error } = await hapusArsip(id);
+      if (!error) sukses++;
+    }
+
+    showToast(`${sukses} dari ${selectedIds.size} arsip berhasil dihapus`, "success");
+    setSelectedIds(new Set());
+  }
+
   async function handleViewFile(item) {
     const { data, error } = await getArsipFileUrl(item.file_path);
     if (error) {
@@ -151,6 +205,29 @@ function ArsipPage() {
       return;
     }
     window.open(data.signedUrl, "_blank");
+  }
+
+  function getDataUntukExport() {
+    if (selectedIds.size > 0) {
+      return sortedData.filter((item) => selectedIds.has(item.id));
+    }
+    return sortedData;
+  }
+
+  function handleExportCsv() {
+    const items = getDataUntukExport();
+    const rows = items.map((item) => {
+      const row = {};
+      KOLOM_EXPORT.forEach((k) => {
+        row[k.label] = item[k.field] ?? "";
+      });
+      return row;
+    });
+    exportCsv("koleksi-arsip", rows);
+  }
+
+  function handleCetakPdf() {
+    cetakPdf("Koleksi Arsip - Diskarpus", KOLOM_EXPORT, getDataUntukExport());
   }
 
   if (loading) return <div>Loading arsip...</div>;
@@ -191,6 +268,14 @@ function ArsipPage() {
           Import CSV
         </button>
 
+        <button onClick={handleExportCsv} className="px-4 py-2 border rounded">
+          Export Excel
+        </button>
+
+        <button onClick={handleCetakPdf} className="px-4 py-2 border rounded">
+          Cetak PDF
+        </button>
+
         <button
           onClick={openTambah}
           className="px-4 py-2 bg-blue-600 text-white rounded"
@@ -198,6 +283,24 @@ function ArsipPage() {
           + Tambah arsip
         </button>
       </div>
+
+      {selectedIds.size > 0 && (
+        <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded px-4 py-2">
+          <span className="text-sm text-blue-800">{selectedIds.size} dipilih</span>
+          <button
+            onClick={handleBulkDelete}
+            className="text-sm text-red-600 hover:underline"
+          >
+            Hapus terpilih
+          </button>
+          <button
+            onClick={() => setSelectedIds(new Set())}
+            className="text-sm text-gray-600 hover:underline ml-auto"
+          >
+            Batal pilih
+          </button>
+        </div>
+      )}
 
       <ArsipTable
         data={paginatedData}
@@ -207,6 +310,9 @@ function ArsipPage() {
         sortField={sortField}
         sortDirection={sortDirection}
         onSort={handleSort}
+        selectedIds={selectedIds}
+        onToggleSelect={toggleSelect}
+        onToggleSelectAll={toggleSelectAll}
       />
 
       <TablePagination

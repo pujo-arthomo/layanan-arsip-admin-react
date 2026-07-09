@@ -1,4 +1,15 @@
-function ArsipTable({ data, onEdit, onDelete, onViewFile, sortField, sortDirection, onSort }) {
+function ArsipTable({
+  data,
+  onEdit,
+  onDelete,
+  onViewFile,
+  sortField,
+  sortDirection,
+  onSort,
+  selectedIds,
+  onToggleSelect,
+  onToggleSelectAll,
+}) {
   function renderHeader(label, field, align = "left") {
     const isActive = sortField === field;
     return (
@@ -14,11 +25,21 @@ function ArsipTable({ data, onEdit, onDelete, onViewFile, sortField, sortDirecti
     );
   }
 
+  const allSelected =
+    data.length > 0 && data.every((item) => selectedIds.has(item.id));
+
   return (
     <div className="overflow-x-auto border rounded bg-white">
       <table className="min-w-full border-collapse">
         <thead className="bg-gray-100">
           <tr>
+            <th className="border px-3 py-2 w-10 text-center">
+              <input
+                type="checkbox"
+                checked={allSelected}
+                onChange={onToggleSelectAll}
+              />
+            </th>
             {renderHeader("No Berkas", "no_berkas")}
             {renderHeader("Kode Klasifikasi", "kode_klasifikasi")}
             {renderHeader("Lokasi Bangunan", "lokasi_bangunan")}
@@ -34,13 +55,20 @@ function ArsipTable({ data, onEdit, onDelete, onViewFile, sortField, sortDirecti
         <tbody>
           {data.length === 0 ? (
             <tr>
-              <td colSpan={9} className="border px-3 py-4 text-center text-gray-500">
+              <td colSpan={10} className="border px-3 py-4 text-center text-gray-500">
                 Belum ada data arsip
               </td>
             </tr>
           ) : (
             data.map((item) => (
               <tr key={item.id} className="hover:bg-gray-50">
+                <td className="border px-3 py-2 text-center">
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.has(item.id)}
+                    onChange={() => onToggleSelect(item.id)}
+                  />
+                </td>
                 <td className="border px-3 py-2">{item.no_berkas}</td>
                 <td className="border px-3 py-2">{item.kode_klasifikasi}</td>
                 <td className="border px-3 py-2">{item.lokasi_bangunan}</td>

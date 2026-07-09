@@ -1,4 +1,14 @@
-function PemohonTable({ data, onEdit, onDelete, sortField, sortDirection, onSort }) {
+function PemohonTable({
+  data,
+  onEdit,
+  onDelete,
+  sortField,
+  sortDirection,
+  onSort,
+  selectedIds,
+  onToggleSelect,
+  onToggleSelectAll,
+}) {
   function renderHeader(label, field) {
     const isActive = sortField === field;
     return (
@@ -12,11 +22,21 @@ function PemohonTable({ data, onEdit, onDelete, sortField, sortDirection, onSort
     );
   }
 
+  const allSelected =
+    data.length > 0 && data.every((item) => selectedIds.has(item.id));
+
   return (
     <div className="overflow-x-auto border rounded bg-white">
       <table className="min-w-full border-collapse">
         <thead className="bg-gray-100">
           <tr>
+            <th className="border px-3 py-2 w-10 text-center">
+              <input
+                type="checkbox"
+                checked={allSelected}
+                onChange={onToggleSelectAll}
+              />
+            </th>
             {renderHeader("Waktu Pengajuan", "waktu_pengajuan")}
             {renderHeader("Nama", "nama")}
             {renderHeader("Domisili", "domisili")}
@@ -28,13 +48,20 @@ function PemohonTable({ data, onEdit, onDelete, sortField, sortDirection, onSort
         <tbody>
           {data.length === 0 ? (
             <tr>
-              <td colSpan={5} className="border px-3 py-4 text-center text-gray-500">
+              <td colSpan={6} className="border px-3 py-4 text-center text-gray-500">
                 Belum ada data pemohon
               </td>
             </tr>
           ) : (
             data.map((item) => (
               <tr key={item.id} className="hover:bg-gray-50">
+                <td className="border px-3 py-2 text-center">
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.has(item.id)}
+                    onChange={() => onToggleSelect(item.id)}
+                  />
+                </td>
                 <td className="border px-3 py-2">
                   {new Date(item.waktu_pengajuan).toLocaleString()}
                 </td>

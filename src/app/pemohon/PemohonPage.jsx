@@ -1,10 +1,18 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { usePemohon } from "../../hooks/usePemohon";
 import PemohonTable from "../../components/table/PemohonTable";
 import PageHeader from "../../components/layout/PageHeader";
 import TableSearch from "../../components/table/TableSearch";
 import PemohonFormModal from "../../components/pemohon/PemohonFormModal";
 import { useToast } from "../../components/ui/ToastProvider";
+import { exportCsv, cetakPdf } from "../../utils/export";
+
+const KOLOM_EXPORT = [
+  { label: "Waktu Pengajuan", field: "waktu_pengajuan" },
+  { label: "Nama", field: "nama" },
+  { label: "Domisili", field: "domisili" },
+  { label: "No Rekomendasi", field: "no_rekomendasi" },
+];
 
 function PemohonPage() {
   const { data, loading, error, tambahPemohon, editPemohon, hapusPemohon } =
@@ -17,6 +25,8 @@ function PemohonPage() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+
+  const [selectedIds, setSelectedIds] = useState(new Set());
 
   const filteredData = useMemo(() => {
     if (!query) return data;
@@ -42,6 +52,10 @@ function PemohonPage() {
     });
   }, [filteredData, sortField, sortDirection]);
 
+  useEffect(() => {
+    setSelectedIds(new Set());
+  }, [query, sortField, sortDirection]);
+
   function handleSort(field) {
     if (sortField === field) {
       setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
@@ -49,6 +63,24 @@ function PemohonPage() {
       setSortField(field);
       setSortDirection("asc");
     }
+  }
+
+  function toggleSelect(id) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleSelectAll() {
+    setSelectedIds((prev) => {
+      const allSelected =
+        sortedData.length > 0 && sortedData.every((item) => prev.has(item.id));
+      if (allSelected) return new Set();
+      return new Set(sortedData.map((item) => item.id));
+    });
   }
 
   function openTambah() {
@@ -90,6 +122,50 @@ function PemohonPage() {
     }
   }
 
+  async function handleBulkDelete() {
+    const konfirmasi = window.confirm(
+      `Yakin mau hapus ${selectedIds.size} data pemohon terpilih? Data yang dihapus tidak bisa dikembalikan.`
+    );
+    if (!konfirmasi) return;
+
+    let sukses = 0;
+    for (const id of selectedIds) {
+      const { error } = await hapusPemohon(id);
+      if (!error) sukses++;
+    }
+
+    showToast(`${sukses} dari ${selectedIds.size} data berhasil dihapus`, "success");
+    setSelectedIds(new Set());
+  }
+
+  function getDataUntukExport() {
+    const items =
+      selectedIds.size > 0
+        ? sortedData.filter((item) => selectedIds.has(item.id))
+        : sortedData;
+
+    return items.map((item) => ({
+      ...item,
+      waktu_pengajuan: new Date(item.waktu_pengajuan).toLocaleString("id-ID"),
+    }));
+  }
+
+  function handleExportCsv() {
+    const items = getDataUntukExport();
+    const rows = items.map((item) => {
+      const row = {};
+      KOLOM_EXPORT.forEach((k) => {
+        row[k.label] = item[k.field] ?? "";
+      });
+      return row;
+    });
+    exportCsv("pemohon-arsip", rows);
+  }
+
+  function handleCetakPdf() {
+    cetakPdf("Pemohon Arsip - Diskarpus", KOLOM_EXPORT, getDataUntukExport());
+  }
+
   if (loading) return <div>Loading pemohon...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
@@ -108,11 +184,42 @@ function PemohonPage() {
         </button>
       </div>
 
-      <TableSearch
-        value={query}
-        onChange={setQuery}
-        placeholder="Cari nama, domisili, atau no rekomendasi..."
-      />
+      <div className="flex flex-wrap gap-3 items-center">
+        <TableSearch
+          value={query}
+          onChange={setQuery}
+          placeholder="Cari nama, domisili, atau no rekomendasi..."
+        />
+
+        <button
+          onClick={handleExportCsv}
+          className="ml-auto px-4 py-2 border rounded"
+        >
+          Export Excel
+        </button>
+
+        <button onClick={handleCetakPdf} className="px-4 py-2 border rounded">
+          Cetak PDF
+        </button>
+      </div>
+
+      {selectedIds.size > 0 && (
+        <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded px-4 py-2">
+          <span className="text-sm text-blue-800">{selectedIds.size} dipilih</span>
+          <button
+            onClick={handleBulkDelete}
+            className="text-sm text-red-600 hover:underline"
+          >
+            Hapus terpilih
+          </button>
+          <button
+            onClick={() => setSelectedIds(new Set())}
+            className="text-sm text-gray-600 hover:underline ml-auto"
+          >
+            Batal pilih
+          </button>
+        </div>
+      )}
 
       <PemohonTable
         data={sortedData}
@@ -121,6 +228,9 @@ function PemohonPage() {
         sortField={sortField}
         sortDirection={sortDirection}
         onSort={handleSort}
+        selectedIds={selectedIds}
+        onToggleSelect={toggleSelect}
+        onToggleSelectAll={toggleSelectAll}
       />
 
       <PemohonFormModal
