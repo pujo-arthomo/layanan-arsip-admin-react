@@ -30,3 +30,24 @@ export async function deleteArsip(id) {
     .delete()
     .eq("id", id);
 }
+
+// Upload file scan arsip
+export async function uploadArsipFile(file) {
+  const filePath = `${Date.now()}-${file.name}`;
+  const { error } = await supabase.storage
+    .from("arsip-files")
+    .upload(filePath, file);
+
+  if (error) {
+    return { path: null, error };
+  }
+
+  return { path: filePath, error: null };
+}
+
+// Ambil link sementara buat lihat/download file (berlaku 5 menit)
+export async function getArsipFileUrl(path) {
+  return await supabase.storage
+    .from("arsip-files")
+    .createSignedUrl(path, 300);
+}

@@ -1,4 +1,4 @@
-function ArsipTable({ data, onEdit, onDelete }) {
+function ArsipTable({ data, onEdit, onDelete, onViewFile }) {
   return (
     <div className="overflow-x-auto border rounded bg-white">
       <table className="min-w-full border-collapse">
@@ -34,7 +34,15 @@ function ArsipTable({ data, onEdit, onDelete }) {
                 <td className="border px-3 py-2 text-right">{item.jumlah_arsip}</td>
                 <td className="border px-3 py-2">{item.tingkat_perkembangan}</td>
                 <td className="border px-3 py-2">{item.keterangan_boks}</td>
-                <td className="border px-3 py-2 text-center space-x-3">
+                <td className="border px-3 py-2 text-center space-x-3 whitespace-nowrap">
+                  {item.file_path && (
+                    <button
+                      onClick={() => onViewFile(item)}
+                      className="text-green-600 hover:underline text-sm"
+                    >
+                      Lihat file
+                    </button>
+                  )}
                   <button
                     onClick={() => onEdit(item)}
                     className="text-blue-600 hover:underline text-sm"

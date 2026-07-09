@@ -6,6 +6,7 @@ import TableSearch from "../../components/table/TableSearch";
 import TableFilter from "../../components/table/TableFilter";
 import TablePagination from "../../components/table/TablePagination";
 import ArsipFormModal from "../../components/arsip/ArsipFormModal";
+import { getArsipFileUrl } from "../../services/arsipService";
 
 function ArsipPage() {
   const { data, loading, error, tambahArsip, editArsip, hapusArsip } = useArsip();
@@ -105,6 +106,15 @@ function ArsipPage() {
     }
   }
 
+  async function handleViewFile(item) {
+    const { data, error } = await getArsipFileUrl(item.file_path);
+    if (error) {
+      alert(`Gagal membuka file: ${error.message}`);
+      return;
+    }
+    window.open(data.signedUrl, "_blank");
+  }
+
   if (loading) return <div>Loading arsip...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
@@ -144,7 +154,12 @@ function ArsipPage() {
         </button>
       </div>
 
-      <ArsipTable data={paginatedData} onEdit={openEdit} onDelete={handleDelete} />
+      <ArsipTable
+        data={paginatedData}
+        onEdit={openEdit}
+        onDelete={handleDelete}
+        onViewFile={handleViewFile}
+      />
 
       <TablePagination
         page={page}
