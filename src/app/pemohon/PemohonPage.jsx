@@ -4,16 +4,17 @@ import PemohonTable from "../../components/table/PemohonTable";
 import PageHeader from "../../components/layout/PageHeader";
 import TableSearch from "../../components/table/TableSearch";
 import PemohonFormModal from "../../components/pemohon/PemohonFormModal";
+import { useToast } from "../../components/ui/ToastProvider";
 
 function PemohonPage() {
   const { data, loading, error, tambahPemohon, editPemohon, hapusPemohon } =
     usePemohon();
+  const { showToast } = useToast();
   const [query, setQuery] = useState("");
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
-  // 🔍 Filter data pemohon (client-side)
   const filteredData = useMemo(() => {
     if (!query) return data;
 
@@ -36,11 +37,19 @@ function PemohonPage() {
     setModalOpen(true);
   }
 
-  function handleModalSubmit(payload) {
-    if (editingItem) {
-      return editPemohon(editingItem.id, payload);
+  async function handleModalSubmit(payload) {
+    const result = editingItem
+      ? await editPemohon(editingItem.id, payload)
+      : await tambahPemohon(payload);
+
+    if (!result.error) {
+      showToast(
+        editingItem ? "Data pemohon berhasil diubah" : "Pemohon berhasil ditambahkan",
+        "success"
+      );
     }
-    return tambahPemohon(payload);
+
+    return result;
   }
 
   async function handleDelete(item) {
@@ -51,7 +60,9 @@ function PemohonPage() {
 
     const { error } = await hapusPemohon(item.id);
     if (error) {
-      alert(`Gagal menghapus: ${error.message}`);
+      showToast(`Gagal menghapus: ${error.message}`, "error");
+    } else {
+      showToast("Data pemohon berhasil dihapus", "success");
     }
   }
 

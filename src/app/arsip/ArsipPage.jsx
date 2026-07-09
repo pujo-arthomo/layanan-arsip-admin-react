@@ -7,9 +7,11 @@ import TableFilter from "../../components/table/TableFilter";
 import TablePagination from "../../components/table/TablePagination";
 import ArsipFormModal from "../../components/arsip/ArsipFormModal";
 import { getArsipFileUrl } from "../../services/arsipService";
+import { useToast } from "../../components/ui/ToastProvider";
 
 function ArsipPage() {
   const { data, loading, error, tambahArsip, editArsip, hapusArsip } = useArsip();
+  const { showToast } = useToast();
 
   const [query, setQuery] = useState("");
   const [jenisBangunan, setJenisBangunan] = useState("");
@@ -87,11 +89,19 @@ function ArsipPage() {
     setModalOpen(true);
   }
 
-  function handleModalSubmit(payload) {
-    if (editingItem) {
-      return editArsip(editingItem.id, payload);
+  async function handleModalSubmit(payload) {
+    const result = editingItem
+      ? await editArsip(editingItem.id, payload)
+      : await tambahArsip(payload);
+
+    if (!result.error) {
+      showToast(
+        editingItem ? "Arsip berhasil diubah" : "Arsip berhasil ditambahkan",
+        "success"
+      );
     }
-    return tambahArsip(payload);
+
+    return result;
   }
 
   async function handleDelete(item) {
@@ -102,14 +112,16 @@ function ArsipPage() {
 
     const { error } = await hapusArsip(item.id);
     if (error) {
-      alert(`Gagal menghapus: ${error.message}`);
+      showToast(`Gagal menghapus: ${error.message}`, "error");
+    } else {
+      showToast("Arsip berhasil dihapus", "success");
     }
   }
 
   async function handleViewFile(item) {
     const { data, error } = await getArsipFileUrl(item.file_path);
     if (error) {
-      alert(`Gagal membuka file: ${error.message}`);
+      showToast(`Gagal membuka file: ${error.message}`, "error");
       return;
     }
     window.open(data.signedUrl, "_blank");
