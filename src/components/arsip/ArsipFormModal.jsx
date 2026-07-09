@@ -4,8 +4,6 @@ import { uploadArsipFile } from "../../services/arsipService";
 const JENIS_BANGUNAN_OPTIONS = [
   "Rumah",
   "Ruko",
-  "Gedung Perkantoran",
-  "Gedung Pemerintahan",
   "Gedung Sekolah",
 ];
 
