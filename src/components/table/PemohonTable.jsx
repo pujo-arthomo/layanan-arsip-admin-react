@@ -1,13 +1,26 @@
-function PemohonTable({ data, onEdit, onDelete }) {
+function PemohonTable({ data, onEdit, onDelete, sortField, sortDirection, onSort }) {
+  function renderHeader(label, field) {
+    const isActive = sortField === field;
+    return (
+      <th
+        onClick={() => onSort(field)}
+        className="border px-3 py-2 text-left font-medium cursor-pointer select-none hover:bg-gray-200"
+      >
+        {label}
+        {isActive && (sortDirection === "asc" ? " ▲" : " ▼")}
+      </th>
+    );
+  }
+
   return (
     <div className="overflow-x-auto border rounded bg-white">
       <table className="min-w-full border-collapse">
         <thead className="bg-gray-100">
           <tr>
-            <th className="border px-3 py-2 text-left">Waktu Pengajuan</th>
-            <th className="border px-3 py-2 text-left">Nama</th>
-            <th className="border px-3 py-2 text-left">Domisili</th>
-            <th className="border px-3 py-2 text-left">No Rekomendasi</th>
+            {renderHeader("Waktu Pengajuan", "waktu_pengajuan")}
+            {renderHeader("Nama", "nama")}
+            {renderHeader("Domisili", "domisili")}
+            {renderHeader("No Rekomendasi", "no_rekomendasi")}
             <th className="border px-3 py-2 text-center">Aksi</th>
           </tr>
         </thead>
@@ -15,10 +28,7 @@ function PemohonTable({ data, onEdit, onDelete }) {
         <tbody>
           {data.length === 0 ? (
             <tr>
-              <td
-                colSpan={5}
-                className="border px-3 py-4 text-center text-gray-500"
-              >
+              <td colSpan={5} className="border px-3 py-4 text-center text-gray-500">
                 Belum ada data pemohon
               </td>
             </tr>

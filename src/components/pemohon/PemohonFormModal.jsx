@@ -96,6 +96,7 @@ function PemohonFormModal({ open, onClose, onSubmit, initialData }) {
             <label className="block text-sm text-gray-600 mb-1">Waktu pengajuan</label>
             <input
               type="datetime-local"
+              required
               value={form.waktu_pengajuan}
               onChange={(e) => handleChange("waktu_pengajuan", e.target.value)}
               className="w-full border px-3 py-2 rounded"
@@ -106,6 +107,7 @@ function PemohonFormModal({ open, onClose, onSubmit, initialData }) {
             <label className="block text-sm text-gray-600 mb-1">Nama</label>
             <input
               type="text"
+              required
               value={form.nama}
               onChange={(e) => handleChange("nama", e.target.value)}
               className="w-full border px-3 py-2 rounded"
@@ -116,6 +118,7 @@ function PemohonFormModal({ open, onClose, onSubmit, initialData }) {
             <label className="block text-sm text-gray-600 mb-1">Domisili</label>
             <input
               type="text"
+              required
               value={form.domisili}
               onChange={(e) => handleChange("domisili", e.target.value)}
               className="w-full border px-3 py-2 rounded"
@@ -126,6 +129,7 @@ function PemohonFormModal({ open, onClose, onSubmit, initialData }) {
             <label className="block text-sm text-gray-600 mb-1">No rekomendasi</label>
             <input
               type="text"
+              required
               value={form.no_rekomendasi}
               onChange={(e) => handleChange("no_rekomendasi", e.target.value)}
               className="w-full border px-3 py-2 rounded"

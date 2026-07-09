@@ -12,6 +12,9 @@ function PemohonPage() {
   const { showToast } = useToast();
   const [query, setQuery] = useState("");
 
+  const [sortField, setSortField] = useState(null);
+  const [sortDirection, setSortDirection] = useState("asc");
+
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
@@ -26,6 +29,27 @@ function PemohonPage() {
         .some((field) => field.toLowerCase().includes(q))
     );
   }, [data, query]);
+
+  const sortedData = useMemo(() => {
+    if (!sortField) return filteredData;
+
+    return [...filteredData].sort((a, b) => {
+      const va = a[sortField] ?? "";
+      const vb = b[sortField] ?? "";
+      if (va < vb) return sortDirection === "asc" ? -1 : 1;
+      if (va > vb) return sortDirection === "asc" ? 1 : -1;
+      return 0;
+    });
+  }, [filteredData, sortField, sortDirection]);
+
+  function handleSort(field) {
+    if (sortField === field) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  }
 
   function openTambah() {
     setEditingItem(null);
@@ -90,7 +114,14 @@ function PemohonPage() {
         placeholder="Cari nama, domisili, atau no rekomendasi..."
       />
 
-      <PemohonTable data={filteredData} onEdit={openEdit} onDelete={handleDelete} />
+      <PemohonTable
+        data={sortedData}
+        onEdit={openEdit}
+        onDelete={handleDelete}
+        sortField={sortField}
+        sortDirection={sortDirection}
+        onSort={handleSort}
+      />
 
       <PemohonFormModal
         open={modalOpen}

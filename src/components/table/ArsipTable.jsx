@@ -1,17 +1,32 @@
-function ArsipTable({ data, onEdit, onDelete, onViewFile }) {
+function ArsipTable({ data, onEdit, onDelete, onViewFile, sortField, sortDirection, onSort }) {
+  function renderHeader(label, field, align = "left") {
+    const isActive = sortField === field;
+    return (
+      <th
+        onClick={() => onSort(field)}
+        className={`border px-3 py-2 font-medium cursor-pointer select-none hover:bg-gray-200 ${
+          align === "right" ? "text-right" : "text-left"
+        }`}
+      >
+        {label}
+        {isActive && (sortDirection === "asc" ? " ▲" : " ▼")}
+      </th>
+    );
+  }
+
   return (
     <div className="overflow-x-auto border rounded bg-white">
       <table className="min-w-full border-collapse">
         <thead className="bg-gray-100">
           <tr>
-            <th className="border px-3 py-2 text-left">No Berkas</th>
-            <th className="border px-3 py-2 text-left">Kode Klasifikasi</th>
-            <th className="border px-3 py-2 text-left">Lokasi Bangunan</th>
-            <th className="border px-3 py-2 text-left">Jenis Bangunan</th>
-            <th className="border px-3 py-2 text-left">Kurun Waktu</th>
-            <th className="border px-3 py-2 text-right">Jumlah Arsip</th>
-            <th className="border px-3 py-2 text-left">Tingkat Perkembangan</th>
-            <th className="border px-3 py-2 text-left">Keterangan Boks</th>
+            {renderHeader("No Berkas", "no_berkas")}
+            {renderHeader("Kode Klasifikasi", "kode_klasifikasi")}
+            {renderHeader("Lokasi Bangunan", "lokasi_bangunan")}
+            {renderHeader("Jenis Bangunan", "jenis_bangunan")}
+            {renderHeader("Kurun Waktu", "kurun_waktu")}
+            {renderHeader("Jumlah Arsip", "jumlah_arsip", "right")}
+            {renderHeader("Tingkat Perkembangan", "tingkat_perkembangan")}
+            {renderHeader("Keterangan Boks", "keterangan_boks")}
             <th className="border px-3 py-2 text-center">Aksi</th>
           </tr>
         </thead>

@@ -19,6 +19,9 @@ function ArsipPage() {
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 10;
 
+  const [sortField, setSortField] = useState(null);
+  const [sortDirection, setSortDirection] = useState("asc");
+
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
@@ -69,15 +72,36 @@ function ArsipPage() {
     return result;
   }, [data, query, jenisBangunan, kurunWaktu]);
 
+  const sortedData = useMemo(() => {
+    if (!sortField) return filteredData;
+
+    return [...filteredData].sort((a, b) => {
+      const va = a[sortField] ?? "";
+      const vb = b[sortField] ?? "";
+      if (va < vb) return sortDirection === "asc" ? -1 : 1;
+      if (va > vb) return sortDirection === "asc" ? 1 : -1;
+      return 0;
+    });
+  }, [filteredData, sortField, sortDirection]);
+
   useEffect(() => {
     setPage(1);
-  }, [query, jenisBangunan, kurunWaktu]);
+  }, [query, jenisBangunan, kurunWaktu, sortField, sortDirection]);
 
-  const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
+  const totalPages = Math.ceil(sortedData.length / PAGE_SIZE);
   const paginatedData = useMemo(() => {
     const start = (page - 1) * PAGE_SIZE;
-    return filteredData.slice(start, start + PAGE_SIZE);
-  }, [filteredData, page]);
+    return sortedData.slice(start, start + PAGE_SIZE);
+  }, [sortedData, page]);
+
+  function handleSort(field) {
+    if (sortField === field) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  }
 
   function openTambah() {
     setEditingItem(null);
@@ -171,6 +195,9 @@ function ArsipPage() {
         onEdit={openEdit}
         onDelete={handleDelete}
         onViewFile={handleViewFile}
+        sortField={sortField}
+        sortDirection={sortDirection}
+        onSort={handleSort}
       />
 
       <TablePagination
