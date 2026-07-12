@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+const STATUS_OPTIONS = ["Menunggu", "Diproses", "Selesai"];
+
 function toDatetimeLocal(isoString) {
   const d = isoString ? new Date(isoString) : new Date();
   const pad = (n) => String(n).padStart(2, "0");
@@ -11,7 +13,9 @@ function buatKosong() {
     waktu_pengajuan: toDatetimeLocal(),
     nama: "",
     domisili: "",
+    keterangan: "",
     no_rekomendasi: "",
+    status: "Menunggu",
   };
 }
 
@@ -30,7 +34,9 @@ function PemohonFormModal({ open, onClose, onSubmit, initialData }) {
               waktu_pengajuan: toDatetimeLocal(initialData.waktu_pengajuan),
               nama: initialData.nama ?? "",
               domisili: initialData.domisili ?? "",
+              keterangan: initialData.keterangan ?? "",
               no_rekomendasi: initialData.no_rekomendasi ?? "",
+              status: initialData.status ?? "Menunggu",
             }
           : buatKosong()
       );
@@ -70,7 +76,7 @@ function PemohonFormModal({ open, onClose, onSubmit, initialData }) {
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg w-full max-w-md p-5">
+      <div className="bg-white rounded-lg w-full max-w-md p-5 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-1">
           <h3 className="text-lg font-semibold">
             {isEdit ? "Edit pemohon" : "Tambah pemohon"}
@@ -126,6 +132,19 @@ function PemohonFormModal({ open, onClose, onSubmit, initialData }) {
           </div>
 
           <div>
+            <label className="block text-sm text-gray-600 mb-1">
+              Keterangan (arsip/keperluan yang dicari)
+            </label>
+            <textarea
+              required
+              rows={3}
+              value={form.keterangan}
+              onChange={(e) => handleChange("keterangan", e.target.value)}
+              className="w-full border px-3 py-2 rounded"
+            />
+          </div>
+
+          <div>
             <label className="block text-sm text-gray-600 mb-1">No rekomendasi</label>
             <input
               type="text"
@@ -134,6 +153,20 @@ function PemohonFormModal({ open, onClose, onSubmit, initialData }) {
               onChange={(e) => handleChange("no_rekomendasi", e.target.value)}
               className="w-full border px-3 py-2 rounded"
             />
+          </div>
+
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Status</label>
+            <select
+              required
+              value={form.status}
+              onChange={(e) => handleChange("status", e.target.value)}
+              className="w-full border px-3 py-2 rounded bg-white"
+            >
+              {STATUS_OPTIONS.map((opt) => (
+                <option key={opt}>{opt}</option>
+              ))}
+            </select>
           </div>
 
           <div className="flex justify-end gap-2 pt-2">
