@@ -95,6 +95,15 @@ function PemohonFormModal({ open, onClose, onSubmit, initialData }) {
             : "Lengkapi data pemohon baru. Status otomatis \"Diproses\" karena diinput langsung oleh petugas."}
         </p>
 
+        {isEdit && initialData?.nomor_layanan && (
+          <div className="text-sm bg-gray-50 border rounded px-3 py-2 mb-3">
+            <span className="text-gray-500">Nomor layanan: </span>
+            <span className="font-medium text-gray-800">
+              {initialData.nomor_layanan}
+            </span>
+          </div>
+        )}
+
         {error && (
           <div className="text-sm text-red-600 mb-3">{error}</div>
         )}
@@ -147,7 +156,9 @@ function PemohonFormModal({ open, onClose, onSubmit, initialData }) {
           </div>
 
           <div>
-            <label className="block text-sm text-gray-600 mb-1">No rekomendasi</label>
+            <label className="block text-sm text-gray-600 mb-1">
+              No rekomendasi (dari PTSP)
+            </label>
             <input
               type="text"
               required

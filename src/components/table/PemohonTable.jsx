@@ -50,6 +50,7 @@ function PemohonTable({
               />
             </th>
             {renderHeader("Waktu Pengajuan", "waktu_pengajuan")}
+            {renderHeader("Nomor Layanan", "nomor_layanan")}
             {renderHeader("Nama", "nama")}
             {renderHeader("Domisili", "domisili")}
             {renderHeader("Keterangan", "keterangan")}
@@ -62,7 +63,7 @@ function PemohonTable({
         <tbody>
           {data.length === 0 ? (
             <tr>
-              <td colSpan={8} className="border px-3 py-4 text-center text-gray-500">
+              <td colSpan={9} className="border px-3 py-4 text-center text-gray-500">
                 Belum ada data pemohon
               </td>
             </tr>
@@ -78,6 +79,9 @@ function PemohonTable({
                 </td>
                 <td className="border px-3 py-2">
                   {new Date(item.waktu_pengajuan).toLocaleString()}
+                </td>
+                <td className="border px-3 py-2 whitespace-nowrap">
+                  {item.nomor_layanan}
                 </td>
                 <td className="border px-3 py-2">{item.nama}</td>
                 <td className="border px-3 py-2">{item.domisili}</td>

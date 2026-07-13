@@ -9,6 +9,7 @@ import { exportCsv, cetakPdf } from "../../utils/export";
 
 const KOLOM_EXPORT = [
   { label: "Waktu Pengajuan", field: "waktu_pengajuan" },
+  { label: "Nomor Layanan", field: "nomor_layanan" },
   { label: "Nama", field: "nama" },
   { label: "Domisili", field: "domisili" },
   { label: "Keterangan", field: "keterangan" },
@@ -36,7 +37,7 @@ function PemohonPage() {
     const q = query.toLowerCase();
 
     return data.filter((item) =>
-      [item.nama, item.domisili, item.no_rekomendasi, item.keterangan]
+      [item.nama, item.domisili, item.no_rekomendasi, item.keterangan, item.nomor_layanan]
         .filter(Boolean)
         .some((field) => field.toLowerCase().includes(q))
     );
