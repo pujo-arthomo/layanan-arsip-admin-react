@@ -15,7 +15,7 @@ function buatKosong() {
     domisili: "",
     keterangan: "",
     no_rekomendasi: "",
-    status: "Menunggu",
+    status: "Diproses",
   };
 }
 
@@ -90,7 +90,9 @@ function PemohonFormModal({ open, onClose, onSubmit, initialData }) {
           </button>
         </div>
         <p className="text-sm text-gray-500 mb-4">
-          {isEdit ? "Ubah data pemohon ini." : "Lengkapi data pemohon baru."}
+          {isEdit
+            ? "Ubah data pemohon ini."
+            : "Lengkapi data pemohon baru. Status otomatis \"Diproses\" karena diinput langsung oleh petugas."}
         </p>
 
         {error && (

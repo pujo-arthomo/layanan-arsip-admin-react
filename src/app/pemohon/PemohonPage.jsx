@@ -11,7 +11,9 @@ const KOLOM_EXPORT = [
   { label: "Waktu Pengajuan", field: "waktu_pengajuan" },
   { label: "Nama", field: "nama" },
   { label: "Domisili", field: "domisili" },
+  { label: "Keterangan", field: "keterangan" },
   { label: "No Rekomendasi", field: "no_rekomendasi" },
+  { label: "Status", field: "status" },
 ];
 
 function PemohonPage() {
@@ -34,7 +36,7 @@ function PemohonPage() {
     const q = query.toLowerCase();
 
     return data.filter((item) =>
-      [item.nama, item.domisili, item.no_rekomendasi]
+      [item.nama, item.domisili, item.no_rekomendasi, item.keterangan]
         .filter(Boolean)
         .some((field) => field.toLowerCase().includes(q))
     );
@@ -138,6 +140,15 @@ function PemohonPage() {
     setSelectedIds(new Set());
   }
 
+  async function handleStatusChange(item, newStatus) {
+    const { error } = await editPemohon(item.id, { status: newStatus });
+    if (error) {
+      showToast(`Gagal ubah status: ${error.message}`, "error");
+    } else {
+      showToast(`Status diubah jadi "${newStatus}"`, "success");
+    }
+  }
+
   function getDataUntukExport() {
     const items =
       selectedIds.size > 0
@@ -225,6 +236,7 @@ function PemohonPage() {
         data={sortedData}
         onEdit={openEdit}
         onDelete={handleDelete}
+        onStatusChange={handleStatusChange}
         sortField={sortField}
         sortDirection={sortDirection}
         onSort={handleSort}

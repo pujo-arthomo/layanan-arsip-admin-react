@@ -1,21 +1,19 @@
-function statusBadge(status) {
+const STATUS_OPTIONS = ["Menunggu", "Diproses", "Selesai"];
+
+function statusColor(status) {
   const styles = {
-    Menunggu: "bg-yellow-100 text-yellow-800",
-    Diproses: "bg-blue-100 text-blue-800",
-    Selesai: "bg-green-100 text-green-800",
+    Menunggu: "bg-yellow-100 text-yellow-800 border-yellow-300",
+    Diproses: "bg-blue-100 text-blue-800 border-blue-300",
+    Selesai: "bg-green-100 text-green-800 border-green-300",
   };
-  const cls = styles[status] || "bg-gray-100 text-gray-800";
-  return (
-    <span className={`px-2 py-1 rounded text-xs font-medium ${cls}`}>
-      {status || "Menunggu"}
-    </span>
-  );
+  return styles[status] || "bg-gray-100 text-gray-800 border-gray-300";
 }
 
 function PemohonTable({
   data,
   onEdit,
   onDelete,
+  onStatusChange,
   sortField,
   sortDirection,
   onSort,
@@ -87,7 +85,19 @@ function PemohonTable({
                   {item.keterangan}
                 </td>
                 <td className="border px-3 py-2">{item.no_rekomendasi}</td>
-                <td className="border px-3 py-2">{statusBadge(item.status)}</td>
+                <td className="border px-3 py-2">
+                  <select
+                    value={item.status || "Menunggu"}
+                    onChange={(e) => onStatusChange(item, e.target.value)}
+                    className={`text-xs font-medium rounded px-2 py-1 border ${statusColor(item.status)}`}
+                  >
+                    {STATUS_OPTIONS.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
+                </td>
                 <td className="border px-3 py-2 text-center space-x-3">
                   <button
                     onClick={() => onEdit(item)}
