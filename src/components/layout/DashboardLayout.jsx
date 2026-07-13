@@ -3,11 +3,11 @@ import Header from "./Header";
 
 function DashboardLayout({ children }) {
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-[#FBF3E4]">
       {/* ================= Sidebar ================= */}
-      <aside className="w-64 bg-slate-800 text-white flex flex-col">
+      <aside className="w-64 bg-[#1B4B3A] text-[#FBF3E4] flex flex-col">
         {/* Brand */}
-        <div className="p-4 font-bold text-lg border-b border-slate-700">
+        <div className="p-4 font-bold text-lg border-b border-white/10">
           Diskarpus Admin
         </div>
 
@@ -16,10 +16,8 @@ function DashboardLayout({ children }) {
           <NavLink
             to="/dashboard"
             className={({ isActive }) =>
-              `block px-3 py-2 rounded ${
-                isActive
-                  ? "bg-slate-700"
-                  : "hover:bg-slate-700"
+              `block px-3 py-2 rounded font-medium ${
+                isActive ? "bg-[#8BC53F] text-[#1B4B3A]" : "hover:bg-white/10"
               }`
             }
           >
@@ -29,10 +27,8 @@ function DashboardLayout({ children }) {
           <NavLink
             to="/pemohon"
             className={({ isActive }) =>
-              `block px-3 py-2 rounded ${
-                isActive
-                  ? "bg-slate-700"
-                  : "hover:bg-slate-700"
+              `block px-3 py-2 rounded font-medium ${
+                isActive ? "bg-[#8BC53F] text-[#1B4B3A]" : "hover:bg-white/10"
               }`
             }
           >
@@ -42,10 +38,8 @@ function DashboardLayout({ children }) {
           <NavLink
             to="/arsip"
             className={({ isActive }) =>
-              `block px-3 py-2 rounded ${
-                isActive
-                  ? "bg-slate-700"
-                  : "hover:bg-slate-700"
+              `block px-3 py-2 rounded font-medium ${
+                isActive ? "bg-[#8BC53F] text-[#1B4B3A]" : "hover:bg-white/10"
               }`
             }
           >
@@ -60,10 +54,8 @@ function DashboardLayout({ children }) {
         <Header />
 
         {/* Content */}
-        <main className="flex-1 bg-gray-100 p-6">
-          <div className="max-w-7xl mx-auto">
-            {children}
-          </div>
+        <main className="flex-1 bg-[#FBF3E4] p-6">
+          <div className="max-w-7xl mx-auto">{children}</div>
         </main>
       </div>
     </div>
