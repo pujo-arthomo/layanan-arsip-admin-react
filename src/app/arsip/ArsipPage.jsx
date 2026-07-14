@@ -263,30 +263,38 @@ function ArsipPage() {
 
         <button
           onClick={() => setImportOpen(true)}
-          className="ml-auto px-4 py-2 border rounded"
+          className="ml-auto px-4 py-2 border border-[#DDD3BC] text-[#1B4B3A] rounded-full hover:bg-[#F5F0E4]"
         >
           Import CSV
         </button>
 
-        <button onClick={handleExportCsv} className="px-4 py-2 border rounded">
+        <button
+          onClick={handleExportCsv}
+          className="px-4 py-2 border border-[#DDD3BC] text-[#1B4B3A] rounded-full hover:bg-[#F5F0E4]"
+        >
           Export Excel
         </button>
 
-        <button onClick={handleCetakPdf} className="px-4 py-2 border rounded">
+        <button
+          onClick={handleCetakPdf}
+          className="px-4 py-2 border border-[#DDD3BC] text-[#1B4B3A] rounded-full hover:bg-[#F5F0E4]"
+        >
           Cetak PDF
         </button>
 
         <button
           onClick={openTambah}
-          className="px-4 py-2 bg-blue-600 text-white rounded"
+          className="px-4 py-2 bg-[#1B4B3A] text-white rounded-full font-medium"
         >
           + Tambah arsip
         </button>
       </div>
 
       {selectedIds.size > 0 && (
-        <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded px-4 py-2">
-          <span className="text-sm text-blue-800">{selectedIds.size} dipilih</span>
+        <div className="flex items-center gap-3 bg-[#EFF7DC] border border-[#8BC53F] rounded px-4 py-2">
+          <span className="text-sm text-[#1B4B3A] font-medium">
+            {selectedIds.size} dipilih
+          </span>
           <button
             onClick={handleBulkDelete}
             className="text-sm text-red-600 hover:underline"
@@ -295,7 +303,7 @@ function ArsipPage() {
           </button>
           <button
             onClick={() => setSelectedIds(new Set())}
-            className="text-sm text-gray-600 hover:underline ml-auto"
+            className="text-sm text-[#5C6B63] hover:underline ml-auto"
           >
             Batal pilih
           </button>

@@ -16,6 +16,9 @@ const KOSONG = {
   keterangan_boks: "",
 };
 
+const inputClass =
+  "w-full border border-[#DDD3BC] px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8BC53F]";
+
 function ArsipFormModal({ open, onClose, onSubmit, initialData }) {
   const [form, setForm] = useState(KOSONG);
   const [file, setFile] = useState(null);
@@ -93,20 +96,20 @@ function ArsipFormModal({ open, onClose, onSubmit, initialData }) {
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg w-full max-w-md p-5 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-2xl w-full max-w-md p-5 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-1">
-          <h3 className="text-lg font-semibold">
+          <h3 className="text-lg font-semibold text-[#1B4B3A]">
             {isEdit ? "Edit arsip" : "Tambah arsip"}
           </h3>
           <button
             type="button"
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-700 text-xl leading-none"
+            className="text-gray-400 hover:text-[#1B4B3A] text-xl leading-none"
           >
             &times;
           </button>
         </div>
-        <p className="text-sm text-gray-500 mb-4">
+        <p className="text-sm text-[#5C6B63] mb-4">
           {isEdit ? "Ubah data koleksi arsip ini." : "Lengkapi data koleksi arsip baru."}
         </p>
 
@@ -116,58 +119,58 @@ function ArsipFormModal({ open, onClose, onSubmit, initialData }) {
 
         <form onSubmit={handleSubmit} className="space-y-3">
           <div>
-            <label className="block text-sm text-gray-600 mb-1">No berkas</label>
+            <label className="block text-sm text-[#5C6B63] mb-1">No berkas</label>
             <input
               type="text"
               required
               value={form.no_berkas}
               onChange={(e) => handleChange("no_berkas", e.target.value)}
-              className="w-full border px-3 py-2 rounded"
+              className={inputClass}
             />
           </div>
 
           <div className="flex gap-3">
             <div className="flex-1">
-              <label className="block text-sm text-gray-600 mb-1">Kode klasifikasi</label>
+              <label className="block text-sm text-[#5C6B63] mb-1">Kode klasifikasi</label>
               <input
                 type="text"
                 required
                 value={form.kode_klasifikasi}
                 onChange={(e) => handleChange("kode_klasifikasi", e.target.value)}
-                className="w-full border px-3 py-2 rounded"
+                className={inputClass}
               />
             </div>
             <div className="flex-1">
-              <label className="block text-sm text-gray-600 mb-1">Jumlah arsip</label>
+              <label className="block text-sm text-[#5C6B63] mb-1">Jumlah arsip</label>
               <input
                 type="number"
                 required
                 value={form.jumlah_arsip}
                 onChange={(e) => handleChange("jumlah_arsip", e.target.value)}
-                className="w-full border px-3 py-2 rounded"
+                className={inputClass}
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm text-gray-600 mb-1">Lokasi bangunan</label>
+            <label className="block text-sm text-[#5C6B63] mb-1">Lokasi bangunan</label>
             <input
               type="text"
               required
               value={form.lokasi_bangunan}
               onChange={(e) => handleChange("lokasi_bangunan", e.target.value)}
-              className="w-full border px-3 py-2 rounded"
+              className={inputClass}
             />
           </div>
 
           <div className="flex gap-3">
             <div className="flex-1">
-              <label className="block text-sm text-gray-600 mb-1">Jenis bangunan</label>
+              <label className="block text-sm text-[#5C6B63] mb-1">Jenis bangunan</label>
               <select
                 required
                 value={form.jenis_bangunan}
                 onChange={(e) => handleChange("jenis_bangunan", e.target.value)}
-                className="w-full border px-3 py-2 rounded bg-white"
+                className={`${inputClass} bg-white`}
               >
                 <option value="" disabled>
                   -- Pilih --
@@ -180,24 +183,24 @@ function ArsipFormModal({ open, onClose, onSubmit, initialData }) {
               </select>
             </div>
             <div className="flex-1">
-              <label className="block text-sm text-gray-600 mb-1">Kurun waktu</label>
+              <label className="block text-sm text-[#5C6B63] mb-1">Kurun waktu</label>
               <input
                 type="text"
                 required
                 value={form.kurun_waktu}
                 onChange={(e) => handleChange("kurun_waktu", e.target.value)}
-                className="w-full border px-3 py-2 rounded"
+                className={inputClass}
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm text-gray-600 mb-1">Tingkat perkembangan</label>
+            <label className="block text-sm text-[#5C6B63] mb-1">Tingkat perkembangan</label>
             <select
               required
               value={form.tingkat_perkembangan}
               onChange={(e) => handleChange("tingkat_perkembangan", e.target.value)}
-              className="w-full border px-3 py-2 rounded bg-white"
+              className={`${inputClass} bg-white`}
             >
               {TINGKAT_PERKEMBANGAN_OPTIONS.map((opt) => (
                 <option key={opt}>{opt}</option>
@@ -206,22 +209,22 @@ function ArsipFormModal({ open, onClose, onSubmit, initialData }) {
           </div>
 
           <div>
-            <label className="block text-sm text-gray-600 mb-1">Keterangan boks</label>
+            <label className="block text-sm text-[#5C6B63] mb-1">Keterangan boks</label>
             <input
               type="text"
               required
               value={form.keterangan_boks}
               onChange={(e) => handleChange("keterangan_boks", e.target.value)}
-              className="w-full border px-3 py-2 rounded"
+              className={inputClass}
             />
           </div>
 
           <div>
-            <label className="block text-sm text-gray-600 mb-1">
+            <label className="block text-sm text-[#5C6B63] mb-1">
               File scan (PDF)
             </label>
             {isEdit && initialData?.file_path && !file && (
-              <p className="text-xs text-gray-500 mb-1">
+              <p className="text-xs text-[#5C6B63] mb-1">
                 Sudah ada file tersimpan. Pilih file baru untuk menggantinya, atau biarkan kosong untuk tetap pakai yang lama.
               </p>
             )}
@@ -229,15 +232,23 @@ function ArsipFormModal({ open, onClose, onSubmit, initialData }) {
               type="file"
               accept="application/pdf"
               onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-              className="w-full border px-3 py-2 rounded bg-white text-sm"
+              className={`${inputClass} bg-white text-sm`}
             />
           </div>
 
           <div className="flex justify-end gap-2 pt-2">
-            <button type="button" onClick={onClose} className="px-4 py-2 border rounded">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 border border-[#DDD3BC] text-[#1B4B3A] rounded-full hover:bg-[#F5F0E4]"
+            >
               Batal
             </button>
-            <button type="submit" disabled={saving} className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50">
+            <button
+              type="submit"
+              disabled={saving}
+              className="px-4 py-2 bg-[#1B4B3A] text-white rounded-full font-medium disabled:opacity-50"
+            >
               {saving ? "Menyimpan..." : "Simpan"}
             </button>
           </div>

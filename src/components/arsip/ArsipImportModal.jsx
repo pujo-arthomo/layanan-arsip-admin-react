@@ -113,18 +113,18 @@ function ArsipImportModal({ open, onClose, tambahArsip }) {
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg w-full max-w-lg p-5 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-2xl w-full max-w-lg p-5 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-1">
-          <h3 className="text-lg font-semibold">Import CSV</h3>
+          <h3 className="text-lg font-semibold text-[#1B4B3A]">Import CSV</h3>
           <button
             type="button"
             onClick={handleClose}
-            className="text-gray-400 hover:text-gray-700 text-xl leading-none"
+            className="text-gray-400 hover:text-[#1B4B3A] text-xl leading-none"
           >
             &times;
           </button>
         </div>
-        <p className="text-sm text-gray-500 mb-4">
+        <p className="text-sm text-[#5C6B63] mb-4">
           Upload file CSV sesuai format template untuk menambahkan banyak arsip sekaligus.
         </p>
 
@@ -132,7 +132,7 @@ function ArsipImportModal({ open, onClose, tambahArsip }) {
           type="file"
           accept=".csv"
           onChange={handleFileChange}
-          className="w-full border px-3 py-2 rounded bg-white text-sm mb-4"
+          className="w-full border border-[#DDD3BC] px-3 py-2 rounded-lg bg-white text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-[#8BC53F]"
         />
 
         {result?.status === "invalid" && (
@@ -155,8 +155,8 @@ function ArsipImportModal({ open, onClose, tambahArsip }) {
         )}
 
         {result?.status === "done" && (
-          <div className="text-sm bg-green-50 border border-green-200 rounded p-3 mb-4 space-y-1">
-            <p className="text-green-700 font-medium">
+          <div className="text-sm bg-[#EFF7DC] border border-[#8BC53F] rounded p-3 mb-4 space-y-1">
+            <p className="text-[#1B4B3A] font-medium">
               {result.sukses} dari {result.total} baris berhasil diimport.
             </p>
             {result.gagal.length > 0 && (
@@ -172,7 +172,11 @@ function ArsipImportModal({ open, onClose, tambahArsip }) {
         )}
 
         <div className="flex justify-end gap-2 pt-2">
-          <button type="button" onClick={handleClose} className="px-4 py-2 border rounded">
+          <button
+            type="button"
+            onClick={handleClose}
+            className="px-4 py-2 border border-[#DDD3BC] text-[#1B4B3A] rounded-full hover:bg-[#F5F0E4]"
+          >
             {result?.status === "done" ? "Tutup" : "Batal"}
           </button>
           {result?.status !== "done" && (
@@ -180,7 +184,7 @@ function ArsipImportModal({ open, onClose, tambahArsip }) {
               type="button"
               onClick={handleParse}
               disabled={!file || processing}
-              className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+              className="px-4 py-2 bg-[#1B4B3A] text-white rounded-full font-medium disabled:opacity-50"
             >
               {processing ? "Memproses..." : "Import"}
             </button>

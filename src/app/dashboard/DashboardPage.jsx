@@ -14,16 +14,16 @@ function DashboardPage() {
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="bg-white border rounded-lg p-5">
-          <div className="text-sm text-gray-500">Total koleksi arsip</div>
-          <div className="text-3xl font-semibold mt-1">
+        <div className="bg-white border border-[#EEE6D6] rounded-2xl p-5">
+          <div className="text-sm text-[#5C6B63]">Total koleksi arsip</div>
+          <div className="text-3xl font-bold mt-1 text-[#1B4B3A]">
             {arsipLoading ? "..." : arsipData.length}
           </div>
         </div>
 
-        <div className="bg-white border rounded-lg p-5">
-          <div className="text-sm text-gray-500">Total pemohon</div>
-          <div className="text-3xl font-semibold mt-1">
+        <div className="bg-white border border-[#EEE6D6] rounded-2xl p-5">
+          <div className="text-sm text-[#5C6B63]">Total pemohon</div>
+          <div className="text-3xl font-bold mt-1 text-[#1B4B3A]">
             {pemohonLoading ? "..." : pemohonData.length}
           </div>
         </div>

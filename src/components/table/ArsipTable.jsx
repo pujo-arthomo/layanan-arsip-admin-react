@@ -15,7 +15,7 @@ function ArsipTable({
     return (
       <th
         onClick={() => onSort(field)}
-        className={`border px-3 py-2 font-medium cursor-pointer select-none hover:bg-gray-200 ${
+        className={`border px-3 py-2 font-medium cursor-pointer select-none hover:bg-[#EEE6D6] ${
           align === "right" ? "text-right" : "text-left"
         }`}
       >
@@ -29,9 +29,9 @@ function ArsipTable({
     data.length > 0 && data.every((item) => selectedIds.has(item.id));
 
   return (
-    <div className="overflow-x-auto border rounded bg-white">
+    <div className="overflow-x-auto border border-[#EEE6D6] rounded-lg bg-white">
       <table className="min-w-full border-collapse">
-        <thead className="bg-gray-100">
+        <thead className="bg-[#F5F0E4] text-[#1B4B3A]">
           <tr>
             <th className="border px-3 py-2 w-10 text-center">
               <input
@@ -55,13 +55,13 @@ function ArsipTable({
         <tbody>
           {data.length === 0 ? (
             <tr>
-              <td colSpan={10} className="border px-3 py-4 text-center text-gray-500">
+              <td colSpan={10} className="border px-3 py-4 text-center text-[#5C6B63]">
                 Belum ada data arsip
               </td>
             </tr>
           ) : (
             data.map((item) => (
-              <tr key={item.id} className="hover:bg-gray-50">
+              <tr key={item.id} className="hover:bg-[#FBF3E4]/50">
                 <td className="border px-3 py-2 text-center">
                   <input
                     type="checkbox"
@@ -81,14 +81,14 @@ function ArsipTable({
                   {item.file_path && (
                     <button
                       onClick={() => onViewFile(item)}
-                      className="text-green-600 hover:underline text-sm"
+                      className="text-[#5C8A3A] hover:underline text-sm"
                     >
                       Lihat file
                     </button>
                   )}
                   <button
                     onClick={() => onEdit(item)}
-                    className="text-blue-600 hover:underline text-sm"
+                    className="text-[#1B4B3A] hover:underline text-sm"
                   >
                     Edit
                   </button>

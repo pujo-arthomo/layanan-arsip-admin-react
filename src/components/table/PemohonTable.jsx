@@ -26,7 +26,7 @@ function PemohonTable({
     return (
       <th
         onClick={() => onSort(field)}
-        className="border px-3 py-2 text-left font-medium cursor-pointer select-none hover:bg-gray-200"
+        className="border px-3 py-2 text-left font-medium cursor-pointer select-none hover:bg-[#EEE6D6]"
       >
         {label}
         {isActive && (sortDirection === "asc" ? " ▲" : " ▼")}
@@ -38,9 +38,9 @@ function PemohonTable({
     data.length > 0 && data.every((item) => selectedIds.has(item.id));
 
   return (
-    <div className="overflow-x-auto border rounded bg-white">
+    <div className="overflow-x-auto border border-[#EEE6D6] rounded-lg bg-white">
       <table className="min-w-full border-collapse">
-        <thead className="bg-gray-100">
+        <thead className="bg-[#F5F0E4] text-[#1B4B3A]">
           <tr>
             <th className="border px-3 py-2 w-10 text-center">
               <input
@@ -63,13 +63,13 @@ function PemohonTable({
         <tbody>
           {data.length === 0 ? (
             <tr>
-              <td colSpan={9} className="border px-3 py-4 text-center text-gray-500">
+              <td colSpan={9} className="border px-3 py-4 text-center text-[#5C6B63]">
                 Belum ada data pemohon
               </td>
             </tr>
           ) : (
             data.map((item) => (
-              <tr key={item.id} className="hover:bg-gray-50">
+              <tr key={item.id} className="hover:bg-[#FBF3E4]/50">
                 <td className="border px-3 py-2 text-center">
                   <input
                     type="checkbox"
@@ -105,7 +105,7 @@ function PemohonTable({
                 <td className="border px-3 py-2 text-center space-x-3">
                   <button
                     onClick={() => onEdit(item)}
-                    className="text-blue-600 hover:underline text-sm"
+                    className="text-[#1B4B3A] hover:underline text-sm"
                   >
                     Edit
                   </button>
