@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 import { uploadArsipFile } from "../../services/arsipService";
-import {
-  JENIS_BANGUNAN_OPTIONS,
-  TINGKAT_PERKEMBANGAN_OPTIONS,
-} from "../../constants/arsip";
+import { TINGKAT_PERKEMBANGAN_OPTIONS } from "../../constants/arsip";
 
 const KOSONG = {
   no_berkas: "",
@@ -13,6 +10,7 @@ const KOSONG = {
   kurun_waktu: "",
   jumlah_arsip: "",
   tingkat_perkembangan: "Asli",
+  retribusi: "",
   keterangan_boks: "",
 };
 
@@ -39,6 +37,7 @@ function ArsipFormModal({ open, onClose, onSubmit, initialData }) {
               kurun_waktu: initialData.kurun_waktu ?? "",
               jumlah_arsip: initialData.jumlah_arsip ?? "",
               tingkat_perkembangan: initialData.tingkat_perkembangan ?? "Asli",
+              retribusi: initialData.retribusi ?? "",
               keterangan_boks: initialData.keterangan_boks ?? "",
             }
           : KOSONG
@@ -73,7 +72,6 @@ function ArsipFormModal({ open, onClose, onSubmit, initialData }) {
 
     const payload = {
       ...form,
-      jumlah_arsip: form.jumlah_arsip === "" ? null : Number(form.jumlah_arsip),
       file_path,
     };
 
@@ -88,11 +86,6 @@ function ArsipFormModal({ open, onClose, onSubmit, initialData }) {
     setSaving(false);
     onClose();
   }
-
-  const jenisBangunanSelectOptions =
-    form.jenis_bangunan && !JENIS_BANGUNAN_OPTIONS.includes(form.jenis_bangunan)
-      ? [...JENIS_BANGUNAN_OPTIONS, form.jenis_bangunan]
-      : JENIS_BANGUNAN_OPTIONS;
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
@@ -143,8 +136,9 @@ function ArsipFormModal({ open, onClose, onSubmit, initialData }) {
             <div className="flex-1">
               <label className="block text-sm text-[#5C6B63] mb-1">Jumlah arsip</label>
               <input
-                type="number"
+                type="text"
                 required
+                placeholder="cth. 1 Berkas"
                 value={form.jumlah_arsip}
                 onChange={(e) => handleChange("jumlah_arsip", e.target.value)}
                 className={inputClass}
@@ -163,35 +157,27 @@ function ArsipFormModal({ open, onClose, onSubmit, initialData }) {
             />
           </div>
 
-          <div className="flex gap-3">
-            <div className="flex-1">
-              <label className="block text-sm text-[#5C6B63] mb-1">Jenis bangunan</label>
-              <select
-                required
-                value={form.jenis_bangunan}
-                onChange={(e) => handleChange("jenis_bangunan", e.target.value)}
-                className={`${inputClass} bg-white`}
-              >
-                <option value="" disabled>
-                  -- Pilih --
-                </option>
-                {jenisBangunanSelectOptions.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex-1">
-              <label className="block text-sm text-[#5C6B63] mb-1">Kurun waktu</label>
-              <input
-                type="text"
-                required
-                value={form.kurun_waktu}
-                onChange={(e) => handleChange("kurun_waktu", e.target.value)}
-                className={inputClass}
-              />
-            </div>
+          <div>
+            <label className="block text-sm text-[#5C6B63] mb-1">Jenis bangunan</label>
+            <input
+              type="text"
+              required
+              placeholder="cth. Mendirikan Bangunan Toko"
+              value={form.jenis_bangunan}
+              onChange={(e) => handleChange("jenis_bangunan", e.target.value)}
+              className={inputClass}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-[#5C6B63] mb-1">Kurun waktu</label>
+            <input
+              type="text"
+              required
+              value={form.kurun_waktu}
+              onChange={(e) => handleChange("kurun_waktu", e.target.value)}
+              className={inputClass}
+            />
           </div>
 
           <div>
@@ -206,6 +192,19 @@ function ArsipFormModal({ open, onClose, onSubmit, initialData }) {
                 <option key={opt}>{opt}</option>
               ))}
             </select>
+          </div>
+
+          <div>
+            <label className="block text-sm text-[#5C6B63] mb-1">
+              Retribusi <span className="text-[#8A8168] font-normal">(opsional)</span>
+            </label>
+            <input
+              type="text"
+              placeholder="cth. Rp 1.419.203, atau kosongkan jika tidak ada"
+              value={form.retribusi}
+              onChange={(e) => handleChange("retribusi", e.target.value)}
+              className={inputClass}
+            />
           </div>
 
           <div>

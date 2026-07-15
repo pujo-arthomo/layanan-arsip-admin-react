@@ -1,9 +1,6 @@
 import { useState } from "react";
 import Papa from "papaparse";
-import {
-  JENIS_BANGUNAN_OPTIONS,
-  TINGKAT_PERKEMBANGAN_OPTIONS,
-} from "../../constants/arsip";
+import { TINGKAT_PERKEMBANGAN_OPTIONS } from "../../constants/arsip";
 
 const KOLOM_MAP = {
   "No Berkas": "no_berkas",
@@ -13,6 +10,7 @@ const KOLOM_MAP = {
   "Kurun Waktu": "kurun_waktu",
   "Jumlah Arsip": "jumlah_arsip",
   "Tingkat Perkembangan": "tingkat_perkembangan",
+  "Retribusi": "retribusi",
   "Keterangan Boks": "keterangan_boks",
 };
 
@@ -22,13 +20,9 @@ function validasiBaris(row, nomorBaris) {
   if (!row.no_berkas) errors.push("No Berkas kosong");
   if (!row.kode_klasifikasi) errors.push("Kode Klasifikasi kosong");
   if (!row.lokasi_bangunan) errors.push("Lokasi Bangunan kosong");
-  if (!JENIS_BANGUNAN_OPTIONS.includes(row.jenis_bangunan)) {
-    errors.push(`Jenis Bangunan "${row.jenis_bangunan}" tidak valid`);
-  }
+  if (!row.jenis_bangunan) errors.push("Jenis Bangunan kosong");
   if (!row.kurun_waktu) errors.push("Kurun Waktu kosong");
-  if (row.jumlah_arsip === "" || isNaN(Number(row.jumlah_arsip))) {
-    errors.push("Jumlah Arsip harus angka");
-  }
+  if (!row.jumlah_arsip) errors.push("Jumlah Arsip kosong");
   if (!TINGKAT_PERKEMBANGAN_OPTIONS.includes(row.tingkat_perkembangan)) {
     errors.push(`Tingkat Perkembangan "${row.tingkat_perkembangan}" tidak valid`);
   }
@@ -90,7 +84,6 @@ function ArsipImportModal({ open, onClose, tambahArsip }) {
         for (let i = 0; i < rows.length; i++) {
           const payload = {
             ...rows[i],
-            jumlah_arsip: Number(rows[i].jumlah_arsip),
             file_path: null,
           };
           const { error } = await tambahArsip(payload);

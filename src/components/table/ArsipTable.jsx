@@ -45,8 +45,9 @@ function ArsipTable({
             {renderHeader("Lokasi Bangunan", "lokasi_bangunan")}
             {renderHeader("Jenis Bangunan", "jenis_bangunan")}
             {renderHeader("Kurun Waktu", "kurun_waktu")}
-            {renderHeader("Jumlah Arsip", "jumlah_arsip", "right")}
+            {renderHeader("Jumlah Arsip", "jumlah_arsip")}
             {renderHeader("Tingkat Perkembangan", "tingkat_perkembangan")}
+            {renderHeader("Retribusi", "retribusi")}
             {renderHeader("Keterangan Boks", "keterangan_boks")}
             <th className="border px-3 py-2 text-center">Aksi</th>
           </tr>
@@ -55,7 +56,7 @@ function ArsipTable({
         <tbody>
           {data.length === 0 ? (
             <tr>
-              <td colSpan={10} className="border px-3 py-4 text-center text-[#5C6B63]">
+              <td colSpan={11} className="border px-3 py-4 text-center text-[#5C6B63]">
                 Belum ada data arsip
               </td>
             </tr>
@@ -74,8 +75,9 @@ function ArsipTable({
                 <td className="border px-3 py-2">{item.lokasi_bangunan}</td>
                 <td className="border px-3 py-2">{item.jenis_bangunan}</td>
                 <td className="border px-3 py-2">{item.kurun_waktu}</td>
-                <td className="border px-3 py-2 text-right">{item.jumlah_arsip}</td>
+                <td className="border px-3 py-2">{item.jumlah_arsip}</td>
                 <td className="border px-3 py-2">{item.tingkat_perkembangan}</td>
+                <td className="border px-3 py-2">{item.retribusi}</td>
                 <td className="border px-3 py-2">{item.keterangan_boks}</td>
                 <td className="border px-3 py-2">
                   <div className="flex items-center justify-center gap-1">

@@ -19,6 +19,7 @@ const KOLOM_EXPORT = [
   { label: "Kurun Waktu", field: "kurun_waktu" },
   { label: "Jumlah Arsip", field: "jumlah_arsip" },
   { label: "Tingkat Perkembangan", field: "tingkat_perkembangan" },
+  { label: "Retribusi", field: "retribusi" },
   { label: "Keterangan Boks", field: "keterangan_boks" },
 ];
 
