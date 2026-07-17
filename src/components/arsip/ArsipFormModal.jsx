@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { uploadArsipFile } from "../../services/arsipService";
-import { TINGKAT_PERKEMBANGAN_OPTIONS } from "../../constants/arsip";
+import { TINGKAT_PERKEMBANGAN_OPTIONS, bersihkanRetribusi } from "../../constants/arsip";
 
 const KOSONG = {
   no_berkas: "",
@@ -72,6 +72,7 @@ function ArsipFormModal({ open, onClose, onSubmit, initialData }) {
 
     const payload = {
       ...form,
+      retribusi: bersihkanRetribusi(form.retribusi),
       file_path,
     };
 
@@ -196,13 +197,14 @@ function ArsipFormModal({ open, onClose, onSubmit, initialData }) {
 
           <div>
             <label className="block text-sm text-[#5C6B63] mb-1">
-              Retribusi <span className="text-[#8A8168] font-normal">(opsional)</span>
+              Retribusi <span className="text-[#8A8168] font-normal">(opsional, angka saja)</span>
             </label>
             <input
               type="text"
-              placeholder="cth. Rp 1.419.203, atau kosongkan jika tidak ada"
+              inputMode="numeric"
+              placeholder="cth. 1000000 (kosongkan jika tidak ada)"
               value={form.retribusi}
-              onChange={(e) => handleChange("retribusi", e.target.value)}
+              onChange={(e) => handleChange("retribusi", e.target.value.replace(/\D/g, ""))}
               className={inputClass}
             />
           </div>

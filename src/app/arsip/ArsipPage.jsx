@@ -3,7 +3,6 @@ import { useArsip } from "../../hooks/useArsip";
 import ArsipTable from "../../components/table/ArsipTable";
 import PageHeader from "../../components/layout/PageHeader";
 import TableSearch from "../../components/table/TableSearch";
-import TableFilter from "../../components/table/TableFilter";
 import TablePagination from "../../components/table/TablePagination";
 import ArsipFormModal from "../../components/arsip/ArsipFormModal";
 import ArsipImportModal from "../../components/arsip/ArsipImportModal";
@@ -28,10 +27,8 @@ function ArsipPage() {
   const { showToast } = useToast();
 
   const [query, setQuery] = useState("");
-  const [jenisBangunan, setJenisBangunan] = useState("");
-  const [kurunWaktu, setKurunWaktu] = useState("");
   const [page, setPage] = useState(1);
-  const PAGE_SIZE = 10;
+  const [pageSize, setPageSize] = useState(10);
 
   const [sortField, setSortField] = useState(null);
   const [sortDirection, setSortDirection] = useState("asc");
@@ -41,22 +38,6 @@ function ArsipPage() {
   const [importOpen, setImportOpen] = useState(false);
 
   const [selectedIds, setSelectedIds] = useState(new Set());
-
-  const jenisBangunanOptions = useMemo(
-    () =>
-      Array.from(
-        new Set(data.map((item) => item.jenis_bangunan).filter(Boolean))
-      ),
-    [data]
-  );
-
-  const kurunWaktuOptions = useMemo(
-    () =>
-      Array.from(
-        new Set(data.map((item) => item.kurun_waktu).filter(Boolean))
-      ),
-    [data]
-  );
 
   const filteredData = useMemo(() => {
     let result = data;
@@ -78,16 +59,8 @@ function ArsipPage() {
       );
     }
 
-    if (jenisBangunan) {
-      result = result.filter((item) => item.jenis_bangunan === jenisBangunan);
-    }
-
-    if (kurunWaktu) {
-      result = result.filter((item) => item.kurun_waktu === kurunWaktu);
-    }
-
     return result;
-  }, [data, query, jenisBangunan, kurunWaktu]);
+  }, [data, query]);
 
   const sortedData = useMemo(() => {
     if (!sortField) return filteredData;
@@ -104,17 +77,17 @@ function ArsipPage() {
   useEffect(() => {
     setPage(1);
     setSelectedIds(new Set());
-  }, [query, jenisBangunan, kurunWaktu, sortField, sortDirection]);
+  }, [query, sortField, sortDirection, pageSize]);
 
   useEffect(() => {
     setSelectedIds(new Set());
   }, [page]);
 
-  const totalPages = Math.ceil(sortedData.length / PAGE_SIZE);
+  const totalPages = Math.ceil(sortedData.length / pageSize);
   const paginatedData = useMemo(() => {
-    const start = (page - 1) * PAGE_SIZE;
-    return sortedData.slice(start, start + PAGE_SIZE);
-  }, [sortedData, page]);
+    const start = (page - 1) * pageSize;
+    return sortedData.slice(start, start + pageSize);
+  }, [sortedData, page, pageSize]);
 
   function handleSort(field) {
     if (sortField === field) {
@@ -228,7 +201,7 @@ function ArsipPage() {
   }
 
   function handleCetakPdf() {
-    cetakPdf("Koleksi Arsip - Diskarpus", KOLOM_EXPORT, getDataUntukExport());
+    cetakPdf("Daftar Arsip IMB - Diskarpus", KOLOM_EXPORT, getDataUntukExport());
   }
 
   if (loading) return <div>Loading arsip...</div>;
@@ -237,7 +210,7 @@ function ArsipPage() {
   return (
     <div className="space-y-4">
       <PageHeader
-        title="Koleksi Arsip"
+        title="Daftar Arsip IMB"
         subtitle="Daftar arsip yang tersimpan di Diskarpus"
       />
 
@@ -248,19 +221,16 @@ function ArsipPage() {
           placeholder="Cari arsip..."
         />
 
-        <TableFilter
-          label="Jenis Bangunan"
-          value={jenisBangunan}
-          options={jenisBangunanOptions}
-          onChange={setJenisBangunan}
-        />
-
-        <TableFilter
-          label="Kurun Waktu"
-          value={kurunWaktu}
-          options={kurunWaktuOptions}
-          onChange={setKurunWaktu}
-        />
+        <select
+          value={pageSize}
+          onChange={(e) => setPageSize(Number(e.target.value))}
+          className="border border-[#DDD3BC] px-3 py-2 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#8BC53F]"
+        >
+          <option value={10}>10 / halaman</option>
+          <option value={25}>25 / halaman</option>
+          <option value={50}>50 / halaman</option>
+          <option value={100}>100 / halaman</option>
+        </select>
 
         <button
           onClick={() => setImportOpen(true)}

@@ -43,7 +43,7 @@ function DashboardLayout({ children }) {
               }`
             }
           >
-            Koleksi Arsip
+            Daftar Arsip IMB
           </NavLink>
         </nav>
       </aside>

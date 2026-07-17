@@ -1,3 +1,5 @@
+import { formatRupiah } from "../../constants/arsip";
+
 function ArsipTable({
   data,
   onEdit,
@@ -77,7 +79,7 @@ function ArsipTable({
                 <td className="border px-3 py-2">{item.kurun_waktu}</td>
                 <td className="border px-3 py-2">{item.jumlah_arsip}</td>
                 <td className="border px-3 py-2">{item.tingkat_perkembangan}</td>
-                <td className="border px-3 py-2">{item.retribusi}</td>
+                <td className="border px-3 py-2">{formatRupiah(item.retribusi)}</td>
                 <td className="border px-3 py-2">{item.keterangan_boks}</td>
                 <td className="border px-3 py-2">
                   <div className="flex items-center justify-center gap-1">

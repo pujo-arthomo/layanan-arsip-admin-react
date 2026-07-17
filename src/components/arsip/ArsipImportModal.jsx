@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Papa from "papaparse";
-import { TINGKAT_PERKEMBANGAN_OPTIONS } from "../../constants/arsip";
+import { TINGKAT_PERKEMBANGAN_OPTIONS, bersihkanRetribusi } from "../../constants/arsip";
 
 const KOLOM_MAP = {
   "No Berkas": "no_berkas",
@@ -63,6 +63,7 @@ function ArsipImportModal({ open, onClose, tambahArsip }) {
           for (const [kolom, field] of Object.entries(KOLOM_MAP)) {
             mapped[field] = (raw[kolom] ?? "").toString().trim();
           }
+          mapped.retribusi = bersihkanRetribusi(mapped.retribusi);
           return mapped;
         });
 
